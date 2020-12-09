@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { useHistory, useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import {
   SignTitle,

@@ -11,7 +11,6 @@ import fire from '../fire/fire';
 class SignUp extends Component {
   // eslint-disable-next-line react/state-in-constructor
   state = {
-    id: (Math.floor(Math.random() * (10000 - 1000)) + 1000),
     email: '',
     password: '',
     passError: '',
@@ -27,6 +26,20 @@ class SignUp extends Component {
     fire
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(({ user }) => {
+        firebase
+          .database()
+          .ref('users/' + user.uid)
+          .set(
+            {
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              currentTimeWeb: 0,
+              currentTimeMob: 0,
+            },
+          );
+      })
       .catch((err) => {
         // eslint-disable-next-line default-case
         switch (err.code) {
@@ -40,15 +53,7 @@ class SignUp extends Component {
         }
       });
 
-    firebase.database().ref('users/' + this.state.id).set(
-      {
-        id: this.state.id,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
 
-      },
-    );
   };
 
   render() {
