@@ -23,18 +23,21 @@ class SignUp extends Component {
   };
 
   onClick = () => {
+    const {
+      email, password, firstName, lastName,
+    } = this.state;
     fire
       .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         firebase
           .database()
-          .ref('users/' + user.uid)
+          .ref(`users/${user.uid}`)
           .set(
             {
-              firstName: this.state.firstName,
-              lastName: this.state.lastName,
-              email: this.state.email,
+              firstName,
+              lastName,
+              email,
               currentTimeWeb: 0,
               currentTimeMob: 0,
             },
@@ -52,11 +55,10 @@ class SignUp extends Component {
             break;
         }
       });
-
-
   };
 
   render() {
+    const { emailError, passError } = this.state;
     return (
       <form className="signUp">
         <SignTitle>Register</SignTitle>
@@ -82,12 +84,14 @@ class SignUp extends Component {
           placeholder="Email"
           onChange={this.onChange}
         />
+        <p style={{ color: 'red' }}>{emailError}</p>
         <InputStyleComponent
           name="password"
           type="password"
           placeholder="Password"
           onChange={this.onChange}
         />
+        <p style={{ color: 'red' }}>{passError}</p>
 
         <span className="buttonSpan">
           <Link to="/">

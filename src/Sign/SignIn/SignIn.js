@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   SignTitle,
   InputStyleComponent,
@@ -13,19 +14,8 @@ class SignIn extends Component {
     password: '',
     passError: '',
     emailError: '',
-    webVersion: true,
     logIn: false,
   };
-
-  // componentDidMount() {
-  //   fire.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       console.log(user);
-  //     } else {
-  //       alert('loh');
-  //     }
-  //   });
-  // }
 
   onChange = (event) => {
     const { name, value } = event.target;
@@ -33,10 +23,10 @@ class SignIn extends Component {
   };
 
   onClick = () => {
-    console.log(this.props.history);
+    const { email, password, logIn } = this.state;
     fire
       .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .signInWithEmailAndPassword(email, password)
       .catch((err) => {
         // eslint-disable-next-line default-case
         switch (err.code) {
@@ -50,16 +40,17 @@ class SignIn extends Component {
             break;
         }
       });
+    const { history } = this.props;
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ logIn: !this.state.logIn });
-        this.props.history.push('/Timer');
+        this.setState({ logIn: !logIn });
+        history.push('/Timer');
       }
     });
   };
 
   render() {
-    // console.log(window.innerWidth);
+    const { emailError, passError } = this.state;
     return (
       <form className="signIn">
         <SignTitle>Login</SignTitle>
@@ -70,14 +61,14 @@ class SignIn extends Component {
           type="text"
           onChange={this.onChange}
         />
-        <p style={{ color: 'red' }}>{this.state.emailError}</p>
+        <p style={{ color: 'red' }}>{emailError}</p>
         <InputStyleComponent
           placeholder="Password"
           name="password"
           type="password"
           onChange={this.onChange}
         />
-        <p style={{ color: 'red' }}>{this.state.emailError}</p>
+        <p style={{ color: 'red' }}>{passError}</p>
 
         <span className="buttonSpan">
           <SignButton type="button" onClick={this.onClick}>Login</SignButton>
@@ -94,5 +85,11 @@ class SignIn extends Component {
     );
   }
 }
+
+SignIn.propTypes = {
+  history: PropTypes.object.isRequired,
+};
+
+SignIn.defaultProps = {};
 
 export default SignIn;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import firebase from 'firebase';
 import SignIn from './SignIn/SignIn';
 import SignUp from './SignUp/SignUp';
 import Timer from './Timer/Timer';
-import firebase from 'firebase';
 
 // TODO Redirect if user logged in
 
@@ -38,6 +38,6 @@ const Sign = () => {
       </Router>
     </div>
   );
-}
+};
 
 export default Sign;
